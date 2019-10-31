@@ -62,13 +62,6 @@
 /* Devices */
 /* GPIO */
 #define CONFIG_BCM2835_GPIO
-/* LCD */
-#define CONFIG_LCD_DT_SIMPLEFB
-#define CONFIG_VIDEO_BCM2835
-
-#ifdef CONFIG_CMD_USB
-#define CONFIG_TFTP_TSIZE
-#endif
 
 /* Console configuration */
 #define CONFIG_SYS_CBSIZE		1024
@@ -76,6 +69,10 @@
 /* Environment */
 #define CONFIG_ENV_SIZE			SZ_16K
 #define CONFIG_SYS_LOAD_ADDR		0x1000000
+
+/* /\* We want bootcount *\/ */
+/* #define CONFIG_BOOTCOUNT_ENV */
+/* #define CONFIG_BOOTCOUNT_LIMIT */
 
 /* Shell */
 
@@ -86,9 +83,9 @@
 
 /* Environment */
 #define ENV_DEVICE_SETTINGS \
-	"stdin=serial,usbkbd\0" \
-	"stdout=serial,vidconsole\0" \
-	"stderr=serial,vidconsole\0"
+	"stdin=serial\0" \
+	"stdout=serial\0" \
+	"stderr=serial\0"
 
 #ifdef CONFIG_ARM64
 #define FDT_HIGH "ffffffffffffffff"
@@ -156,34 +153,13 @@
 	#define BOOT_TARGET_MMC(func)
 #endif
 
-#if CONFIG_IS_ENABLED(CMD_USB)
-	#define BOOT_TARGET_USB(func) func(USB, usb, 0)
-#else
-	#define BOOT_TARGET_USB(func)
-#endif
-
-#if CONFIG_IS_ENABLED(CMD_PXE)
-	#define BOOT_TARGET_PXE(func) func(PXE, pxe, na)
-#else
-	#define BOOT_TARGET_PXE(func)
-#endif
-
-#if CONFIG_IS_ENABLED(CMD_DHCP)
-	#define BOOT_TARGET_DHCP(func) func(DHCP, dhcp, na)
-#else
-	#define BOOT_TARGET_DHCP(func)
-#endif
 
 #define BOOT_TARGET_DEVICES(func) \
-	BOOT_TARGET_MMC(func) \
-	BOOT_TARGET_USB(func) \
-	BOOT_TARGET_PXE(func) \
-	BOOT_TARGET_DHCP(func)
+	BOOT_TARGET_MMC(func)
 
 #include <config_distro_bootcmd.h>
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"dhcpuboot=usb start; dhcp u-boot.uimg; bootm\0" \
 	ENV_DEVICE_SETTINGS \
 	ENV_MEM_LAYOUT_SETTINGS \
 	BOOTENV
